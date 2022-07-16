@@ -1,0 +1,54 @@
+.brands {
+  max-height: 350px !important;
+}
+
+.brand-image {
+  height: 14px !important;
+}
+
+.btn-outline-gray {
+  color: #999 !important;
+  border-color: #ced4da !important;
+  background-color: #fff !important;
+}
+
+.btn-outline-gray:hover {
+  color: #fff !important;
+  background-color: #ced4da !important;
+}
+
+.default-image {
+  height: 38px !important;
+}
+
+.description {
+  min-width: 350px !important;
+}
+
+.quantity {
+  max-width: 140px !important;
+  min-width: 80px !important;
+  width: auto !important;
+}
+
+.stock {
+  width: 200px !important;
+}
+
+::ng-deep .tooltip-display > * {
+  color: inherit !important;
+}
+
+::ng-deep .tooltip-display .tooltip-inner {
+  padding: 0.25rem !important;
+  --bs-bg-opacity: 1 !important;
+  background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;
+}
+
+.tooltip-image {
+  height: 200px !important;
+}
+
+.tooltip-table {
+  max-width: 400px !important;
+}

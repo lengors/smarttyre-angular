@@ -1,0 +1,504 @@
+<div
+  class="flex-fill mw-100"
+  [class.align-self-start]="submitted"
+  [class.align-self-center]="!submitted"
+>
+  <div class="container-lg container-fluid">
+    <div class="row">
+      <div class="col col-lg-11 col-xl-10 mx-auto p-0">
+        <div class="row mt-0" [class.g-3]="submitted">
+          <div class="col mx-auto">
+            <div class="row">
+              <div class="col col-lg-11 col-xl-10 col-xxl-9 mx-auto">
+                <form
+                  class="d-flex align-content-start"
+                  (ngSubmit)="onSubmit()"
+                  #searchQueryForm="ngForm"
+                >
+                  <div class="me-2" *ngIf="submitted">
+                    <div class="row">
+                      <div class="col">
+                        <div>
+                          <label
+                            for="offcanvas-button"
+                            class="form-label invisible"
+                          >
+                            " "
+                          </label>
+                          <button
+                            id="offcanvas-button"
+                            class="form-control btn btn-outline-gray px-2"
+                            type="button"
+                            (click)="onOffcanvasToggle(offcanvas)"
+                          >
+                            <i class="fa-solid fa-bars"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 me-2">
+                    <div class="row">
+                      <div class="col">
+                        <div>
+                          <label for="term" class="form-label" i18n
+                            >Search</label
+                          >
+                          <input
+                            type="number"
+                            id="term"
+                            name="term"
+                            class="form-control"
+                            placeholder="2055516"
+                            [(ngModel)]="searchQuery.term"
+                            required="true"
+                            #term="ngModel"
+                            [class.is-invalid]="!term.valid && !term.pristine"
+                            [class.is-valid]="term.valid && !term.pristine"
+                          />
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="!term.valid && !term.pristine"
+                            i18n
+                          >
+                            Term is required!
+                          </div>
+                          <div
+                            class="valid-feedback"
+                            *ngIf="term.valid && !term.pristine"
+                            i18n
+                          >
+                            Looks good!
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="me-2">
+                    <div class="row">
+                      <div class="col">
+                        <div class="quantity">
+                          <label for="quantity" class="form-label" i18n
+                            >Quantity</label
+                          >
+                          <input
+                            type="number"
+                            id="quantity"
+                            name="quantity"
+                            class="form-control"
+                            placeholder="4"
+                            [(ngModel)]="searchQuery.quantity"
+                            required="true"
+                            #quantity="ngModel"
+                            [class.is-invalid]="
+                              !quantity.valid && !quantity.pristine
+                            "
+                            [class.is-valid]="
+                              quantity.valid && !quantity.pristine
+                            "
+                          />
+                          <div
+                            class="invalid-feedback"
+                            *ngIf="!quantity.valid && !quantity.pristine"
+                            i18n
+                          >
+                            Quantity is required!
+                          </div>
+                          <div
+                            class="valid-feedback"
+                            *ngIf="quantity.valid && !quantity.pristine"
+                            i18n
+                          >
+                            Looks good!
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="row">
+                      <div class="col">
+                        <div>
+                          <label
+                            for="request-button"
+                            class="form-label invisible"
+                          >
+                            " "
+                          </label>
+                          <button
+                            id="request-button"
+                            class="form-control btn btn-primary px-2"
+                            type="submit"
+                            [disabled]="!searchQueryForm.form.valid || loading"
+                          >
+                            <span *ngIf="loading" i18n>
+                              <span
+                                class="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                              Loading...
+                            </span>
+                            <span *ngIf="!loading" i18n> Submit </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div *ngIf="submitted" class="row">
+              <div class="col">
+                <div class="table-responsive">
+                  <table
+                    class="table table-hover table-striped text-center align-middle mt-3"
+                  >
+                    <thead class="table-secondary">
+                      <tr>
+                        <th scope="col">
+                          <small i18n>Picture</small>
+                        </th>
+                        <th scope="col" class="text-start">
+                          <small i18n>Description</small>
+                        </th>
+                        <th scope="col">
+                          <small i18n>Stock</small>
+                        </th>
+                        <th scope="col" class="text-end">
+                          <small i18n>Price</small>
+                        </th>
+                        <th scope="col">
+                          <small i18n>Website</small>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        *ngFor="
+                          let tyre of tyres | textFilter: textFilter;
+                          index as i
+                        "
+                      >
+                        <td>
+                          <img
+                            *ngIf="tyre.image"
+                            class="default-image img-thumbnail"
+                            src="{{ tyre.image }}"
+                            (error)="this.onImageError($event.target)"
+                            [ngbTooltip]="tooltipImage"
+                            tooltipClass="opacity-100 text-body tooltip-display"
+                          />
+                          <ng-template #tooltipImage>
+                            <img
+                              class="bg-white img-fluid tooltip-image"
+                              src="{{ tyre.image }}"
+                              alt="{{ tyre.description }}"
+                              title="{{ tyre.description }}"
+                            />
+                          </ng-template>
+                        </td>
+                        <td class="description text-start">
+                          <div>
+                            <small class="d-flex lh-1">
+                              <img
+                                *ngIf="tyre.brand.image"
+                                class="brand-image img-fluid"
+                                src="{{ tyre.brand.image }}"
+                                alt="{{ tyre.brand.description }}"
+                                title="{{ tyre.brand.description }}"
+                              />
+                              <span *ngIf="!tyre.brand.image">{{
+                                tyre.brand.description
+                              }}</span>
+                              <div
+                                *ngIf="tyre.consumption"
+                                class="vr mx-2"
+                              ></div>
+                              <span *ngIf="tyre.consumption">
+                                <i class="fa-solid fa-gas-pump"></i>
+                                {{ tyre.consumption }}
+                              </span>
+                              <div *ngIf="tyre.grip" class="vr mx-2"></div>
+                              <span *ngIf="tyre.grip">
+                                <i class="fa-solid fa-cloud-showers-heavy"></i>
+                                {{ tyre.grip }}
+                              </span>
+                              <div
+                                *ngIf="tyre.noise || tyre.decibels"
+                                class="vr mx-2"
+                              ></div>
+                              <span *ngIf="tyre.noise || tyre.decibels">
+                                <span *ngIf="tyre.decibels">
+                                  {{ tyre.decibels }}
+                                </span>
+                                <i class="fa-solid fa-volume-high"></i>
+                                <span *ngIf="tyre.noise">
+                                  {{ tyre.noise }}
+                                </span>
+                              </span>
+                              <div
+                                *ngIf="tyre.information.length > 0"
+                                class="vr mx-2"
+                              ></div>
+                              <span *ngIf="tyre.information.length > 0">
+                                <i
+                                  class="fa-solid fa-circle-info"
+                                  [ngbTooltip]="tooltipInformation"
+                                  tooltipClass="opacity-100 text-body tooltip-display"
+                                ></i>
+                                <ng-template #tooltipInformation>
+                                  <table
+                                    class="bg-white mb-0 table table-striped tooltip-table"
+                                  >
+                                    <tbody>
+                                      <tr *ngFor="let info of tyre.information">
+                                        <td class="align-middle text-start">
+                                          <img
+                                            class="default-image img-thumbnail"
+                                            src="{{ info.image }}"
+                                            alt="{{ info.description }}"
+                                            title="{{ info.description }}"
+                                            (error)="this.onTableImageError($event.target)"
+                                          />
+                                        </td>
+                                        <td class="align-middle text-start">
+                                          {{ info.description }}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </ng-template>
+                              </span>
+                            </small>
+                          </div>
+                          <p class="mb-0">{{ tyre.description }}</p>
+                        </td>
+                        <td>
+                          <div
+                            id="carousel-{{ i }}"
+                            class="carousel slide carousel-dark d-flex"
+                            data-bs-ride="carousel"
+                          >
+                            <button
+                              class="carousel-control-prev flex-fill position-static w-auto"
+                              [class.invisible]="tyre.stock.length <= 1"
+                              [attr.data-bs-target]="'#carousel-' + i"
+                              data-bs-slide="prev"
+                              type="button"
+                            >
+                              <span
+                                class="carousel-control-prev-icon"
+                                aria-hidden="true"
+                              ></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <div
+                              class="stock flex-fill carousel-inner align-self-center mx-3"
+                              *ngIf="tyre.stock.length > 0"
+                            >
+                              <div
+                                *ngFor="let stock of tyre.stock; index as j"
+                                class="carousel-item"
+                                [class.active]="j === 0"
+                              >
+                                <div
+                                  class="d-flex justify-content-between align-items-center"
+                                >
+                                  <small class="flex-fill">
+                                    <div class="lh-1 text-start">
+                                      <p class="mb-0 text-nowrap" i18n>
+                                        Storage {{ stock[0] }}
+                                      </p>
+                                      <small *ngIf="stock[2]">
+                                        <small>
+                                          <small i18n>
+                                            Delivery:
+                                            {{ stock[2] | formatDate }}
+                                          </small>
+                                        </small>
+                                      </small>
+                                    </div>
+                                  </small>
+                                  <span
+                                    class="fw-normal badge text-dark rounded-pill border border-dark"
+                                  >
+                                    {{ stock[1] }}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              class="stock flex-fill carousel-inner align-self-center mx-3"
+                              *ngIf="tyre.stock.length === 0"
+                            >
+                              <div class="carousel-item active">
+                                <div
+                                  class="d-flex justify-content-between align-items-center"
+                                >
+                                  <small class="flex-fill">
+                                    <div class="lh-1 text-start">
+                                      <p class="mb-0 text-nowrap" i18n>
+                                        No stock
+                                      </p>
+                                    </div>
+                                  </small>
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              class="carousel-control-next flex-fill position-static w-auto"
+                              [class.invisible]="tyre.stock.length <= 1"
+                              [attr.data-bs-target]="'#carousel-' + i"
+                              data-bs-slide="next"
+                              type="button"
+                            >
+                              <span
+                                class="carousel-control-next-icon"
+                                aria-hidden="true"
+                              ></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                          </div>
+                        </td>
+                        <td class="text-end">
+                          {{ tyre.price | currency: "EUR":"symbol" }}
+                        </td>
+                        <td>
+                          <a
+                            href="{{ tyre.url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {{ tyre.crawler | parseCrawler | titlecase }}
+                          </a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template
+  #offcanvas
+  let-offcanvas
+  class="offcanvas offcanvas-start"
+  aria-labelledby="offcanvas-label"
+>
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvas-label" i18n>Advanced Search</h5>
+    <button
+      type="button"
+      class="btn-close text-reset"
+      (click)="offcanvas.dismiss()"
+    ></button>
+  </div>
+  <hr class="mx-3 my-0" />
+  <div class="offcanvas-body">
+    <div class="row">
+      <div class="col">
+        <div class="input-group">
+          <input
+            [(ngModel)]="textFilter"
+            type="text"
+            name="text-filter"
+            class="form-control"
+            id="text-filter"
+            placeholder="Advanced filtering"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col">
+        <ngb-accordion
+          class="accordion-flush"
+          [closeOthers]="true"
+          activeIds="accordion-one"
+        >
+          <ngb-panel id="accordion-one" i18n-title title="Brands">
+            <ng-template ngbPanelContent>
+              <div class="brands w-100 m-0 p-0 ps-1 overflow-auto">
+                <div class="form-check">
+                  <input
+                    [(ngModel)]="selectedAllBrands"
+                    class="form-check-input"
+                    type="checkbox"
+                    value="__all__"
+                    id="check-__all__"
+                    checked="true"
+                    name="check-__all__"
+                    (change)="onChangeSelectedAllBrands()"
+                  />
+                  <label class="form-check-label" for="check-__all__">
+                    *
+                  </label>
+                </div>
+                <div
+                  *ngFor="let brand of brands; index as i"
+                  class="form-check"
+                >
+                  <input
+                    [(ngModel)]="selectedBrands[i]"
+                    class="form-check-input"
+                    type="checkbox"
+                    value="{{ brand }}"
+                    id="check-{{ brand }}"
+                    name="check-{{ brand }}"
+                    (change)="onChangeSelectedBrands($event.target)"
+                  />
+                  <label class="form-check-label" for="check-{{ brand }}">
+                    {{ brand | titlecase }}
+                  </label>
+                </div>
+              </div>
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel id="accordion-two" i18n-title title="Sorting by">
+            <ng-template ngbPanelContent>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="sorting"
+                  class="form-check-input"
+                  type="radio"
+                  name="sorting"
+                  id="sorting-lowest-price"
+                  value="asc"
+                  checked="true"
+                  (change)="onChangeSorting()"
+                />
+                <label class="form-check-label" for="sorting-lowest-price" i18n>
+                  Lowest price
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  [(ngModel)]="sorting"
+                  class="form-check-input"
+                  type="radio"
+                  name="sorting"
+                  id="sorting-highest-price"
+                  value="desc"
+                  (change)="onChangeSorting()"
+                />
+                <label
+                  class="form-check-label"
+                  for="sorting-highest-price"
+                  i18n
+                >
+                  Highest price
+                </label>
+              </div>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+      </div>
+    </div>
+  </div>
+</ng-template>
